@@ -2,7 +2,7 @@
 {% block title %}Edit Artist{% endblock %}
 {% block content %}
   <div class="form-wrapper">
-    <form class="form" method="post" action="/artists/{{artist.id}}/edit">
+    <form class="form" id="form-sub">
       <h3 class="form-heading">Edit artist <em>{{ artist.name }}</em></h3>
       <div class="form-group">
         <label for="name">Name</label>
@@ -55,5 +55,89 @@
       
       <input type="submit" value="Edit Artist" class="btn btn-primary btn-lg btn-block">
     </form>
+
+    <p
+    style="
+      color: chocolate;
+      border: 1px solid gray;
+      padding: 7px;
+      border-radius: 3px;
+      display: none;
+      margin-top: 20px;
+    "
+    id="success-msg"
+  >
+    Artist created successfully!!!
+  </p>
   </div>
+
+  <script>
+    const url = window.location.href;
+    const artistId = url.slice(30, 31);
+    const nameInput = document.getElementById("name");
+    const cityInput = document.getElementById("city");
+    const stateInput = document.getElementById("state");
+    const phoneInput = document.getElementById("phone");
+    const genresInput = document.getElementById("genres");
+    const facebookLinkInput = document.getElementById("facebook_link");
+    const imageLinkInput = document.getElementById("image_link");
+    const websiteLinkInput = document.getElementById("website_link");
+    const seekingVenueInput = document.getElementById("seeking_venue");
+    const descriptionInput = document.getElementById("seeking_description");
+    document.getElementById("form-sub").onsubmit = function (e) {
+      e.preventDefault();
+      const name = nameInput.value;
+      const city = cityInput.value;
+      const state = stateInput.value;
+      const phone = phoneInput.value;
+      const genres = genresInput.value;
+      const facebook_link = facebookLinkInput.value;
+      const image_link = imageLinkInput.value;
+      const website_link = websiteLinkInput.value;
+      const seeking_venue = seekingVenueInput.value;
+      const description = descriptionInput.value;
+      document.getElementById("success-msg").style.display = "none";
+      fetch("/artists/" + artistId + "/edit", {
+        method: "POST",
+        body: JSON.stringify({
+          name: name,
+          city: city,
+          state: state,
+          phone: phone,
+          genres: genres,
+          facebook_link: facebook_link,
+          image_link: image_link,
+          website_link: website_link,
+          seeking_venue: seeking_venue,
+          description: description,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            document.getElementById("success-msg").style.display = "flex";
+  
+            nameInput.value = "";
+            cityInput.value = "";
+            stateInput.value = "";
+            phoneInput.value = "";
+            genresInput.value = "";
+            facebookLinkInput.value = "";
+            imageLinkInput.value = "";
+            websiteLinkInput.value = "";
+            seekingVenueInput.value = "";
+            descriptionInput.value = "";
+          }
+          return response.json();
+        })
+        .then((jsonResponse) => {
+          console.log(jsonResponse);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+  </script>
 {% endblock %}

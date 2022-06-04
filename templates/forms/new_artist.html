@@ -1,58 +1,150 @@
-{% extends 'layouts/main.html' %}
-{% block title %}New Artist{% endblock %}
-{% block content %}
-  <div class="form-wrapper">
-    <form method="post" class="form">
-      <h3 class="form-heading">List a new artist</h3>
-      <div class="form-group">
-        <label for="name">Name</label>
-        {{ form.name(class_ = 'form-control', autofocus = true) }}
-      </div>
-      <div class="form-group">
-          <label>City & State</label>
-          <div class="form-inline">
-            <div class="form-group">
-              {{ form.city(class_ = 'form-control', placeholder='City', autofocus = true) }}
-            </div>
-            <div class="form-group">
-              {{ form.state(class_ = 'form-control', placeholder='State', autofocus = true) }}
-            </div>
-          </div>
-      </div>
-      <div class="form-group">
-          <label for="phone">Phone</label>
-          {{ form.phone(class_ = 'form-control', placeholder='xxx-xxx-xxxx', autofocus = true) }}
-        </div>
-      <div class="form-group">
-        <label for="genres">Genres</label>
-        <small>Ctrl+Click to select multiple</small>
-        {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', autofocus = true) }}
-      </div>
-      <div class="form-group">
-          <label for="facebook_link">Facebook Link</label>
-          {{ form.facebook_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
-        </div>
-      
+{% extends 'layouts/main.html' %} {% block title %}New Artist{% endblock %} {%
+block content %}
+<div class="form-wrapper">
+  <form class="form" id="form-sub">
+    <h3 class="form-heading">List a new artist</h3>
+    <div class="form-group">
+      <label for="name">Name</label>
+      {{ form.name(class_ = 'form-control', autofocus = true) }}
+    </div>
+    <div class="form-group">
+      <label>City & State</label>
+      <div class="form-inline">
         <div class="form-group">
-          <label for="image_link">Image Link</label>
-          {{ form.image_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+          {{ form.city(class_ = 'form-control', placeholder='City', autofocus =
+          true) }}
         </div>
-
         <div class="form-group">
-            <label for="website_link">Website Link</label>
-            {{ form.website_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
-          </div>
+          {{ form.state(class_ = 'form-control', placeholder='State', autofocus
+          = true) }}
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      {{ form.phone(class_ = 'form-control', placeholder='xxx-xxx-xxxx',
+      autofocus = true) }}
+    </div>
+    <div class="form-group">
+      <label for="genres">Genres</label>
+      <small>Ctrl+Click to select multiple</small>
+      {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by
+      commas', autofocus = true) }}
+    </div>
+    <div class="form-group">
+      <label for="facebook_link">Facebook Link</label>
+      {{ form.facebook_link(class_ = 'form-control', placeholder='http://',
+      autofocus = true) }}
+    </div>
 
-          <div class="form-group">
-              <label for="seeking_venue">Looking for Venues</label>
-              {{ form.seeking_venue(placeholder='Venue', autofocus = true) }}
-          </div>
+    <div class="form-group">
+      <label for="image_link">Image Link</label>
+      {{ form.image_link(class_ = 'form-control', placeholder='http://',
+      autofocus = true) }}
+    </div>
 
-          <div class="form-group">
-              <label for="seeking_description">Seeking Description</label>
-              {{ form.seeking_description(class_ = 'form-control', autofocus = true) }}
-            </div>
-      <input type="submit" value="Create Artist" class="btn btn-primary btn-lg btn-block">
-    </form>
-  </div>
+    <div class="form-group">
+      <label for="website_link">Website Link</label>
+      {{ form.website_link(class_ = 'form-control', placeholder='http://',
+      autofocus = true) }}
+    </div>
+
+    <div class="form-group">
+      <label for="seeking_venue">Looking for Venues</label>
+      {{ form.seeking_venue(placeholder='Venue', autofocus = true) }}
+    </div>
+
+    <div class="form-group">
+      <label for="seeking_description">Seeking Description</label>
+      {{ form.seeking_description(class_ = 'form-control', autofocus = true) }}
+    </div>
+    <input
+      type="submit"
+      value="Create Artist"
+      class="btn btn-primary btn-lg btn-block"
+    />
+  </form>
+
+  <p
+    style="
+      color: chocolate;
+      border: 1px solid gray;
+      padding: 7px;
+      border-radius: 3px;
+      display: none;
+      margin-top: 20px;
+    "
+    id="success-msg"
+  >
+    Artist created successfully!!!
+  </p>
+</div>
+
+<script>
+  const nameInput = document.getElementById("name");
+  const cityInput = document.getElementById("city");
+  const stateInput = document.getElementById("state");
+  const phoneInput = document.getElementById("phone");
+  const genresInput = document.getElementById("genres");
+  const facebookLinkInput = document.getElementById("facebook_link");
+  const imageLinkInput = document.getElementById("image_link");
+  const websiteLinkInput = document.getElementById("website_link");
+  const seekingVenueInput = document.getElementById("seeking_venue");
+  const descriptionInput = document.getElementById("seeking_description");
+  document.getElementById("form-sub").onsubmit = function (e) {
+    e.preventDefault();
+    const name = nameInput.value;
+    const city = cityInput.value;
+    const state = stateInput.value;
+    const phone = phoneInput.value;
+    const genres = genresInput.value;
+    const facebook_link = facebookLinkInput.value;
+    const image_link = imageLinkInput.value;
+    const website_link = websiteLinkInput.value;
+    const seeking_venue = seekingVenueInput.value;
+    const description = descriptionInput.value;
+    document.getElementById("success-msg").style.display = "none";
+    fetch("/artists/create", {
+      method: "POST",
+      body: JSON.stringify({
+        name: name,
+        city: city,
+        state: state,
+        phone: phone,
+        genres: genres,
+        facebook_link: facebook_link,
+        image_link: image_link,
+        website_link: website_link,
+        seeking_venue: seeking_venue,
+        description: description,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          document.getElementById("success-msg").style.display = "flex";
+
+          nameInput.value = "";
+          cityInput.value = "";
+          stateInput.value = "";
+          phoneInput.value = "";
+          genresInput.value = "";
+          facebookLinkInput.value = "";
+          imageLinkInput.value = "";
+          websiteLinkInput.value = "";
+          seekingVenueInput.value = "";
+          descriptionInput.value = "";
+        }
+        return response.json();
+      })
+      .then((jsonResponse) => {
+        console.log(jsonResponse);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+</script>
 {% endblock %}

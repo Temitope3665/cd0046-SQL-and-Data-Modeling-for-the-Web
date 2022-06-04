@@ -2,7 +2,7 @@
 {% block title %}New Show Listing{% endblock %}
 {% block content %}
   <div class="form-wrapper">
-    <form method="post" class="form">
+    <form id="form">
       <h3 class="form-heading">List a new show</h3>
       <div class="form-group">
         <label for="artist_id">Artist ID</label>
@@ -20,5 +20,53 @@
         </div>
       <input type="submit" value="Create Venue" class="btn btn-primary btn-lg btn-block">
     </form>
+
+    <p style="color: chocolate; border: 1px solid gray; padding: 7px; border-radius: 3px; display: none; margin-top: 20px;" id="success-msg">Shows created successfully!!!</p>
   </div>
+  
+
+  <script>
+    const artistIDInput = document.getElementById("artist_id");
+    const venueIDInput = document.getElementById("venue_id");
+    const startDateInput = document.getElementById("start_time");
+
+    document.getElementById("form").onsubmit = function (e) {
+      e.preventDefault();
+      const artist_id = artistIDInput.value;
+      const venue_id = venueIDInput.value;
+      const start_time = startDateInput.value;
+
+      document.getElementById('success-msg').style.display = "none";
+
+      fetch("/shows/create", {
+        method: "POST",
+        body: JSON.stringify({
+          artist_id: artist_id,
+          venue_id: venue_id,
+          start_time: start_time,
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          document.getElementById('success-msg').style.display = "flex"
+
+          artistIDInput.value = "";
+          venueIDInput.value = "";
+          startDateInput.value = "";
+          // document.location.href="/";
+        }
+        return response.json();
+      })
+      .then((jsonResponse) => {
+        console.log(jsonResponse);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+  </script>
+  
 {% endblock %}
