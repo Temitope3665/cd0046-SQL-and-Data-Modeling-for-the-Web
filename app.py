@@ -281,7 +281,6 @@ def edit_venue_submission(venue_id):
     website_link = request.get_json()['website_link']
     looking_for_talent = request.get_json()['seeking_talent']
     description = request.get_json()['description']
-
     editVenueData = Venue(name=name, city=city, state=state, address=address, phone=phone, genres=genres, facebook_link=facebook_link, image_link=image_link, website_link=website_link, looking_for_talent=looking_for_talent, description=description)
     db.session.query(Venue).filter_by(id=venue_id).update(editVenueData)
     db.session.commit()
@@ -366,7 +365,7 @@ def shows():
 @app.route('/shows/create')
 def create_shows():
   # renders form. do not touch.
-    form = ShowForm()
+  form = ShowForm()
   return render_template('forms/new_show.html', form=form)
 
 @app.route('/shows/create', methods=['POST'])
@@ -405,22 +404,22 @@ def create_show_submission():
 
 @app.errorhandler(404)
 def not_found_error(error):
-    return render_template('errors/404.html'), 404
+  return render_template('errors/404.html'), 404
 
 @app.errorhandler(500)
 def server_error(error):
-    return render_template('errors/500.html'), 500
+  return render_template('errors/500.html'), 500
 
 
 if not app.debug:
-    file_handler = FileHandler('error.log')
-    file_handler.setFormatter(
-        Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
-    )
-    app.logger.setLevel(logging.INFO)
-    file_handler.setLevel(logging.INFO)
-    app.logger.addHandler(file_handler)
-    app.logger.info('errors')
+  file_handler = FileHandler('error.log')
+  file_handler.setFormatter(
+    Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
+  )
+  app.logger.setLevel(logging.INFO)
+  file_handler.setLevel(logging.INFO)
+  app.logger.addHandler(file_handler)
+  app.logger.info('errors')
 
 #----------------------------------------------------------------------------#
 # Launch.
